@@ -11,7 +11,7 @@ public class APITest {
 	
 	@BeforeClass
 	public static void setup() {
-		RestAssured.baseURI = "http://localhost:8001/tasks-backend";
+		RestAssured.baseURI = "http://localhost:8001/tasks-backend"; //Testes estão sendo feitos com base na banco Postgres subido via docker
 	}
 	
 	@Test
