@@ -18,7 +18,7 @@ public class APITest {
 	public void deveRetonarTarefas() {
 		RestAssured.given() // Inicia a dependência baixada do Rest. Given começa a construção de uma simulação de Requisição
 		.when()//Quando acontecer essa solicitação 
-			 .get("/todo")//faça um get
+			 .get("/todo")//faça um get (pega o valor)
 		.then()	//então, depois da solicitação
 			.statusCode(200); //retorne esse status esperado que indica sucesso nesta solicitação
 		;
@@ -43,11 +43,35 @@ public class APITest {
 		.body("{\"task\" : \"Teste via APi\", \"dueDate\" : \"2010-12-30\" }")
 		.contentType(ContentType.JSON) 
 		.when()
-			.post("/todo") 
+			.post("/todo") //adiciona
 		.then()	
 		.log().all()
 			.statusCode(400)
 			.body("message", CoreMatchers.is("Due date must not be in past")) //o body não sabe identificar dois textos... Por isso teve que ser chamado o CoreMatchers
+		;
+	}
+	
+	@Test
+	public void deveRemoverTarefaComSucesso() {
+		Integer id = RestAssured.given()
+		.body("{\"task\" : \"Tarefa Para Remocao\", \"dueDate\" : \"2020-12-30\" }")// Criação de Arquivo Json 
+			.contentType(ContentType.JSON) 
+		.when()
+			.post("/todo") //adiciona
+		.then()	
+			.log().all()
+			.statusCode(201)
+			.extract().path("id"); //extrai específico do caminho.... Agora como ele faz isso ¯\_(ツ)_/¯
+			;
+			System.out.println("ID recebido de RestAssured: " + id);
+		
+		//remover
+			
+		RestAssured.given()
+		.when()
+			.delete("/todo/"+id)
+		.then()
+			.statusCode(204) //status code 204 = ok porém sem conteúdo para informar
 		;
 	}
 
